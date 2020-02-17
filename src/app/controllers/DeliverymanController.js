@@ -100,7 +100,7 @@ class DeliverymanController {
 
     Deliveryman.destroy({ where: { id: deliveryman.id } });
 
-    return res.json({ ok: 'successfully deleted!' });
+    return res.json({ message: 'successfully deleted!' });
   }
 }
 
