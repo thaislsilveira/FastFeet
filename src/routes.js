@@ -8,6 +8,7 @@ import FileController from './app/controllers/FileController';
 import RecipientController from './app/controllers/RecipientController';
 import OrderController from './app/controllers/OrderController';
 import DeliveryController from './app/controllers/DeliveryController';
+import ScheduleController from './app/controllers/ScheduleController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -31,5 +32,7 @@ routes.post('/files', upload.single('file'), FileController.store);
 
 routes.post('/orders', OrderController.store);
 routes.put('/orders/:id', OrderController.update);
+
+routes.get('/schedule/:id', ScheduleController.index);
 
 export default routes;

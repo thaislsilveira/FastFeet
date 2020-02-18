@@ -5,6 +5,9 @@ import Deliveryman from '../models/Deliveryman';
 import Order from '../models/Order';
 import File from '../models/File';
 
+import PackageMail from '../jobs/PackageMail';
+import Queue from '../../lib/Queue';
+
 class OrderController {
   async store(req, res) {
     const schema = Yup.object().shape({
@@ -36,12 +39,19 @@ class OrderController {
     }
 
     const { name: deliveryman_name } = deliverymanExists;
+    const { email: deliveryman_email } = deliverymanExists;
 
     const order = await Order.create({
       order_id: req.params.id,
       deliveryman_id,
       recipient_id,
       product,
+    });
+
+    await Queue.add(PackageMail.key, {
+      order,
+      deliveryman_name,
+      deliveryman_email,
     });
 
     return res.json(order);
