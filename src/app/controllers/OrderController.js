@@ -9,6 +9,55 @@ import PackageMail from '../jobs/PackageMail';
 import Queue from '../../lib/Queue';
 
 class OrderController {
+  async index(req, res) {
+    const { page = 1, per_page = 20 } = req.query;
+
+    const orders = await Order.findAll({
+      where: {
+        canceled_at: null,
+        end_date: null,
+      },
+      order: ['product'],
+      attributes: ['id', 'product', 'canceled_at', 'start_date', 'end_date'],
+      limit: per_page,
+      offset: (page - 1) * per_page,
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'id',
+            'name',
+            'street',
+            'number',
+            'complement',
+            'state',
+            'city',
+            'cep',
+          ],
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name', 'email'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
+    return res.json(orders);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       recipient_id: Yup.number().required(),
@@ -20,7 +69,7 @@ class OrderController {
       return res.status(400).json({ error: 'Validation fails.' });
     }
 
-    const { deliveryman_id, recipient_id, product } = req.body;
+    const { deliveryman_id, recipient_id, signature_id, product } = req.body;
 
     const deliverymanExists = await Deliveryman.findOne({
       where: { id: deliveryman_id },
@@ -38,20 +87,46 @@ class OrderController {
       return res.status(400).json({ error: 'Recipient not exists.' });
     }
 
-    const { name: deliveryman_name } = deliverymanExists;
-    const { email: deliveryman_email } = deliverymanExists;
-
-    const order = await Order.create({
-      order_id: req.params.id,
-      deliveryman_id,
+    const { id: orderId } = await Order.create({
       recipient_id,
+      deliveryman_id,
+      signature_id: null,
       product,
+    });
+
+    const order = await Order.findByPk(orderId, {
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'id',
+            'name',
+            'street',
+            'number',
+            'complement',
+            'state',
+            'city',
+            'cep',
+          ],
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name', 'email'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
+        },
+      ],
     });
 
     await Queue.add(PackageMail.key, {
       order,
-      deliveryman_name,
-      deliveryman_email,
     });
 
     return res.json(order);
@@ -76,29 +151,17 @@ class OrderController {
 
     await order.update(req.body);
 
-    const {
-      id,
-      recipient_id,
-      deliveryman_id,
-      product,
-      signature,
-    } = await Order.findByPk(req.params.id, {
-      include: [
-        {
-          model: File,
-          as: 'signature',
-          attributes: ['id', 'path', 'url'],
-        },
-      ],
-    });
+    return res.json(order);
+  }
 
-    return res.json({
-      id,
-      recipient_id,
-      deliveryman_id,
-      product,
-      signature,
-    });
+  async delete(req, res) {
+    const order = await Order.findByPk(req.params.id);
+
+    order.canceled_at = new Date();
+
+    await order.save();
+
+    return res.json({ message: 'Pedido cancelado com sucesso!' });
   }
 }
 

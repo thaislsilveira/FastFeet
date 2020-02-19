@@ -6,15 +6,22 @@ class PackageMail {
   }
 
   async handle({ data }) {
-    const { order } = data;
+    const {
+      order: { deliveryman, recipient, product },
+    } = data;
 
     await Mail.sendMail({
-      to: `${order.deliveryman_name} <${order.deliveryman_email}>`,
-      subject: 'Pacotes para entrega',
+      to: `${deliveryman.name} <${deliveryman.email}>`,
+      subject: 'Novos Pacotes para entrega',
       template: 'package',
       context: {
-        deliveryman: order.deliveryman_name,
-        product: order.product,
+        deliveryman: deliveryman.name,
+        product,
+        recipient: recipient.name,
+        address: `
+          ${recipient.street},
+          ${recipient.number},
+          ${recipient.city} - ${recipient.state}`,
       },
     });
   }
