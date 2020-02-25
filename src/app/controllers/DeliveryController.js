@@ -1,47 +1,56 @@
 import { Op } from 'sequelize';
+import Deliveryman from '../models/Deliveryman';
 import Order from '../models/Order';
 import Recipient from '../models/Recipient';
 import File from '../models/File';
 
-class DeliverymanController {
+class DeliveryController {
   async index(req, res) {
-    const { id } = req.params;
+    const { page = 1, per_page = 20 } = req.query;
 
-    const { delivered } = req.query;
+    const { id: deliveryman_id } = req.params;
 
-    if (delivered && JSON.parse(delivered)) {
-      const orders = await Order.findAll({
-        where: { id, canceled_at: null, end_date: null },
-        attributes: ['id', 'product', 'recipient_id', 'signature_id'],
-        include: [
-          {
-            model: Recipient,
-            as: 'recipient',
-            attributes: ['id', 'name'],
-            include: [
-              {
-                model: File,
-                as: 'avatar',
-                attributes: ['id', 'path', 'url'],
-              },
-            ],
-          },
-        ],
-      });
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
-      return res.json(orders);
+    if (!deliveryman) {
+      return res.status(400).json({ error: 'Deliveryman not found.' });
     }
-
     const orders = await Order.findAll({
       where: {
-        deliveryman_id: id,
-        canceled_at: { [Op.eq]: null },
-        end_date: { [Op.eq]: null },
+        end_date: {
+          [Op.ne]: null,
+        },
+        deliveryman_id: deliveryman.id,
       },
+      order: ['product'],
+      attributes: ['id', 'product', 'start_date', 'end_date'],
+      limit: per_page,
+      offset: (page - 1) * per_page,
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'id',
+            'name',
+            'street',
+            'number',
+            'complement',
+            'state',
+            'city',
+            'cep',
+          ],
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
     });
 
     return res.json(orders);
   }
 }
 
-export default new DeliverymanController();
+export default new DeliveryController();

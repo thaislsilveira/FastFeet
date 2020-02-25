@@ -69,7 +69,7 @@ class OrderController {
       return res.status(400).json({ error: 'Validation fails.' });
     }
 
-    const { deliveryman_id, recipient_id, signature_id, product } = req.body;
+    const { deliveryman_id, recipient_id, product } = req.body;
 
     const deliverymanExists = await Deliveryman.findOne({
       where: { id: deliveryman_id },
