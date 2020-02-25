@@ -6,12 +6,15 @@ class CancellationMail {
   }
 
   async handle({ data }) {
-    const { deliveryman, recipient, product } = data;
+    // TODO: Criar um loop nos problemas e mandar no email
+    const {
+      order: { deliveryman, recipient, product },
+    } = data.problems[0];
 
     await Mail.sendMail({
       to: `${deliveryman.name} <${deliveryman.email}>`,
       subject: 'Pacote Cancelado',
-      template: 'package',
+      template: 'cancellation',
       context: {
         deliveryman: deliveryman.name,
         product,

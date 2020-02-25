@@ -89,7 +89,7 @@ class DeliveryProblemController {
 
     await deliveryProblem.save();
 
-    const Problems = await DeliveryProblem.findAll({
+    const problems = await DeliveryProblem.findAll({
       order: ['description'],
       attributes: ['id', 'description'],
       include: [
@@ -130,7 +130,7 @@ class DeliveryProblemController {
     });
 
     await Queue.add(CancellationMail.key, {
-      Problems,
+      problems,
     });
 
     return res.json({ message: 'Encomenda cancelado com sucesso!' });
