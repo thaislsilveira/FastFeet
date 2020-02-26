@@ -94,22 +94,24 @@ class ScheduleController {
     /** Funcoes de comparação de tempo entre 8 e 18 e não permitir retirar neste horário */
     const today = new Date();
 
-    const eightHour = format(today.getTime(), "yyyy-MM-dd'T08:00':ssxxx", {
-      locale: pt,
-    });
-    const eighteenHour = format(today.getTime(), "yyyy-MM-dd'T18:00':ssxxx", {
-      locale: pt,
-    });
-
-    const isBetween8and18 = isWithinInterval(parseISO(start_date), {
-      start: parseISO(eightHour),
-      end: parseISO(eighteenHour),
-    });
-
-    if (!isBetween8and18) {
-      return res.status(400).json({
-        error: 'You can only pick up a product from 8:00 am to 18:00 pm.',
+    if (start_date) {
+      const eightHour = format(today.getTime(), "yyyy-MM-dd'T08:00':ssxxx", {
+        locale: pt,
       });
+      const eighteenHour = format(today.getTime(), "yyyy-MM-dd'T18:00':ssxxx", {
+        locale: pt,
+      });
+
+      const isBetween8and18 = isWithinInterval(parseISO(start_date), {
+        start: parseISO(eightHour),
+        end: parseISO(eighteenHour),
+      });
+
+      if (!isBetween8and18) {
+        return res.status(400).json({
+          error: 'You can only pick up a product from 8:00 am to 18:00 pm.',
+        });
+      }
     }
 
     const countDeliveries = await Order.count({
