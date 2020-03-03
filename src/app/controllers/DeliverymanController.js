@@ -17,6 +17,26 @@ class DeliverymanController {
     return res.json(deliverymen);
   }
 
+  async findOne(req, res) {
+    const { id } = req.params;
+
+    const deliverymen = await Deliveryman.findAll({
+      where: {
+       id,
+      },
+      attributes: ['id', 'name', 'email', 'avatar_id'],
+      include: [
+        {
+          model: File,
+          as: 'avatar',
+          attributes: ['name', 'path', 'url'],
+        },
+      ],
+    });
+    return res.json(deliverymen);
+
+  },
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),

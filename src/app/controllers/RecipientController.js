@@ -2,20 +2,51 @@ import * as Yup from 'yup';
 import Recipient from '../models/Recipient';
 
 class RecipientController {
+  async index(req, res) {
+    const recipients = await Recipient.findAll({
+      attributes: [
+        'id',
+        'name',
+        'street',
+        'number',
+        'complement',
+        'state',
+        'city',
+        'cep',
+      ],
+    });
+    return res.json(recipients);
+  }
+
+  async findOne(req, res) {
+    const { id } = req.params;
+
+    const recipients = await Recipient.findAll({
+      where: {
+        id,
+      },
+      attributes: [
+        'id',
+        'name',
+        'street',
+        'number',
+        'complement',
+        'state',
+        'city',
+        'cep',
+      ],
+    });
+    return res.json(recipients);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      email: Yup.string()
-        .email()
-        .required(),
-      password: Yup.string()
-        .required()
-        .min(6),
       street: Yup.string().required(),
       number: Yup.number()
         .positive()
         .required(),
-      complement: Yup.string().required(),
+      complement: Yup.string(),
       state: Yup.string().required(),
       city: Yup.string().required(),
       cep: Yup.number()
@@ -28,7 +59,7 @@ class RecipientController {
     }
 
     const recipientExists = await Recipient.findOne({
-      where: { email: req.body.email },
+      where: { name: req.body.name },
     });
 
     if (recipientExists) {
@@ -37,7 +68,6 @@ class RecipientController {
     const {
       id,
       name,
-      email,
       street,
       number,
       complement,
@@ -48,7 +78,6 @@ class RecipientController {
     return res.json({
       id,
       name,
-      email,
       street,
       number,
       complement,
@@ -61,16 +90,6 @@ class RecipientController {
   async update(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string(),
-      email: Yup.string().email(),
-      oldPassword: Yup.string().min(6),
-      password: Yup.string()
-        .min(6)
-        .when('oldPassword', (oldPassword, field) =>
-          oldPassword ? field.required() : field
-        ),
-      confirmPassword: Yup.string().when('password', (password, field) =>
-        password ? field.required().oneOf([Yup.ref('password')]) : field
-      ),
       street: Yup.string(),
       number: Yup.number().positive(),
       complement: Yup.string(),
@@ -82,13 +101,13 @@ class RecipientController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
-    const { email, oldPassword } = req.body;
+    const { name } = req.body;
 
     const recipient = await Recipient.findByPk(req.params.id);
 
-    if (email !== recipient.email) {
+    if (name !== recipient.name) {
       const recipientExistis = await Recipient.findOne({
-        where: { email },
+        where: { name },
       });
 
       if (recipientExistis) {
@@ -96,13 +115,8 @@ class RecipientController {
       }
     }
 
-    if (oldPassword && !(await recipient.checkPassword(oldPassword))) {
-      return res.status(401).json({ error: 'Password does not match' });
-    }
-
     const {
       id,
-      name,
       street,
       number,
       complement,
@@ -114,7 +128,6 @@ class RecipientController {
     return res.json({
       id,
       name,
-      email,
       street,
       number,
       complement,
