@@ -58,6 +58,58 @@ class OrderController {
     return res.json(orders);
   }
 
+  async findOne(req, res) {
+    const { page = 1, per_page = 20 } = req.query;
+
+    const { id } = req.params;
+
+    const orders = await Order.findAll({
+      where: {
+        canceled_at: null,
+        end_date: null,
+        id,
+      },
+      order: ['product'],
+      attributes: ['id', 'product', 'canceled_at', 'start_date', 'end_date'],
+      limit: per_page,
+      offset: (page - 1) * per_page,
+      include: [
+        {
+          model: Recipient,
+          as: 'recipient',
+          attributes: [
+            'id',
+            'name',
+            'street',
+            'number',
+            'complement',
+            'state',
+            'city',
+            'cep',
+          ],
+        },
+        {
+          model: Deliveryman,
+          as: 'deliveryman',
+          attributes: ['id', 'name', 'email'],
+          include: [
+            {
+              model: File,
+              as: 'avatar',
+              attributes: ['id', 'path', 'url'],
+            },
+          ],
+        },
+        {
+          model: File,
+          as: 'signature',
+          attributes: ['id', 'path', 'url'],
+        },
+      ],
+    });
+    return res.json(orders);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       recipient_id: Yup.number().required(),
