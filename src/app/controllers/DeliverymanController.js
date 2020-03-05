@@ -22,7 +22,7 @@ class DeliverymanController {
 
     const deliverymen = await Deliveryman.findAll({
       where: {
-       id,
+        id,
       },
       attributes: ['id', 'name', 'email', 'avatar_id'],
       include: [
@@ -34,8 +34,7 @@ class DeliverymanController {
       ],
     });
     return res.json(deliverymen);
-
-  },
+  }
 
   async store(req, res) {
     const schema = Yup.object().shape({
