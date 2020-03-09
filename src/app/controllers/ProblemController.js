@@ -9,8 +9,6 @@ class ProblemController {
 
     const order = await Order.findByPk(order_id);
 
-    console.log('TESTE:', order);
-
     if (!order) {
       return res.status(400).json({ error: 'Order not found.' });
     }

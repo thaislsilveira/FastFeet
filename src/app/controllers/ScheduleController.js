@@ -59,15 +59,28 @@ class ScheduleController {
   }
 
   async update(req, res) {
+    const { deliverymanId: deliveryman_id } = req.params;
+    const { id: order_id } = req.params;
+
     const { start_date, end_date, signature_id } = req.body;
 
-    const order = await Order.findByPk(req.params.id);
-    const { id: deliveryman_id } = req.params;
+    const deliveryman = await Deliveryman.findByPk(deliveryman_id);
 
+    if (!deliveryman) {
+      return res.status(400).json({ error: 'Deliveryman not found.' });
+    }
+
+    const order = await Order.findByPk(req.params.id);
+
+    if (order.deliveryman_id !== deliveryman.id) {
+      return res
+        .status(400)
+        .json({ error: 'Deliveryman not authorized to make changes.' });
+    }
     /** Funções de não permitir cadastrar end_date sem ter um start_date */
     if (end_date && !start_date) {
       const isStartDateNull = await Order.findOne({
-        where: { id: req.params.id, start_date: null },
+        where: { id: order_id, start_date: null },
       });
 
       if (isStartDateNull) {
@@ -116,10 +129,11 @@ class ScheduleController {
 
     const countDeliveries = await Order.count({
       where: {
-        deliveryman_id,
+        deliveryman_id: deliveryman.id,
         start_date: { [Op.gte]: startOfDay(today), [Op.lte]: endOfDay(today) },
       },
     });
+    console.log(countDeliveries);
     if (countDeliveries + 1 > 5) {
       return res.status(400).json({
         error: 'Only 5 withdrawals are allowed per day!',

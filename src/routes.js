@@ -41,7 +41,7 @@ routes.get('/orders', OrderController.index);
 routes.get('/orders/:id', OrderController.findOne);
 routes.delete('/orders/:id', OrderController.delete);
 
-routes.put('/schedule/:id', ScheduleController.update);
+routes.put('/schedule/:deliverymanId/:id', ScheduleController.update);
 routes.get('/schedule/:id', ScheduleController.index);
 routes.get('/schedule/:id/deliveries', DeliveryController.index);
 
