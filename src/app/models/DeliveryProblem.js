@@ -4,6 +4,7 @@ class DeliveryProblem extends Model {
   static init(sequelize) {
     super.init(
       {
+        order_id: Sequelize.INTEGER,
         description: Sequelize.STRING,
       },
       {

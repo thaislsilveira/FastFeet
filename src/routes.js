@@ -19,17 +19,31 @@ const upload = multer(multerConfig);
 
 routes.post('/sessions', SessionController.store);
 
+routes.get('/recipients/:id', RecipientController.findOne);
+
+routes.get('/deliverymen/:id', DeliverymanController.findOne);
+
+routes.get('/orders/:id', OrderController.findOne);
+
+routes.put('/schedule/:deliverymanId/:id', ScheduleController.update);
+routes.get('/schedule/:id', ScheduleController.index);
+routes.get('/schedule/:id/deliveries', DeliveryController.index);
+
+routes.post('/deliveryproblems', DeliveyProblemController.store);
+
+routes.post('/deliveryproblems/:id/problems', ProblemController.store);
+routes.get('/deliveryproblems/:id/problems', ProblemController.index);
+routes.delete('/deliveryproblems/:id', DeliveyProblemController.delete);
+
 routes.use(authMiddleware);
 
 routes.post('/recipients', RecipientController.store);
 routes.get('/recipients', RecipientController.index);
-routes.get('/recipients/:id', RecipientController.findOne);
 routes.put('/recipients/:id', RecipientController.update);
 routes.delete('/recipients/:id', RecipientController.delete);
 
 routes.post('/deliverymen', DeliverymanController.store);
 routes.get('/deliverymen', DeliverymanController.index);
-routes.get('/deliverymen/:id', DeliverymanController.findOne);
 routes.put('/deliverymen/:id', DeliverymanController.update);
 routes.delete('/deliverymen/:id', DeliverymanController.delete);
 
@@ -38,16 +52,9 @@ routes.post('/files', upload.single('file'), FileController.store);
 routes.post('/orders', OrderController.store);
 routes.put('/orders/:id', OrderController.update);
 routes.get('/orders', OrderController.index);
-routes.get('/orders/:id', OrderController.findOne);
 routes.delete('/orders/:id', OrderController.delete);
-
-routes.put('/schedule/:deliverymanId/:id', ScheduleController.update);
-routes.get('/schedule/:id', ScheduleController.index);
-routes.get('/schedule/:id/deliveries', DeliveryController.index);
 
 routes.post('/deliveryproblems', DeliveyProblemController.store);
 routes.get('/deliveryproblems', DeliveyProblemController.index);
-routes.get('/deliveryproblems/:id/problems', ProblemController.index);
-routes.delete('/deliveryproblems/:id', DeliveyProblemController.delete);
 
 export default routes;

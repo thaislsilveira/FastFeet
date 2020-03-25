@@ -24,7 +24,7 @@ class DeliverymanController {
       where: {
         id,
       },
-      attributes: ['id', 'name', 'email', 'avatar_id'],
+      attributes: ['id', 'name', 'email', 'created_at', 'avatar_id'],
       include: [
         {
           model: File,

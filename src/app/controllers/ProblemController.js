@@ -1,3 +1,4 @@
+import * as Yup from 'yup';
 import DeliveryProblem from '../models/DeliveryProblem';
 import Order from '../models/Order';
 
@@ -30,6 +31,33 @@ class ProblemController {
       ],
     });
     return res.json(deliveryProblems);
+  }
+
+  async store(req, res) {
+    const schema = Yup.object().shape({
+      description: Yup.string().required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'A message is required' });
+    }
+
+    const { id } = req.params;
+
+    const order = await Order.findByPk(id);
+
+    if (!order) {
+      return res.status(400).json({ error: 'Order does not exist' });
+    }
+
+    const { description } = req.body;
+
+    const createorder = await DeliveryProblem.create({
+      order_id: id,
+      description,
+    });
+
+    return res.json(createorder);
   }
 }
 export default new ProblemController();
