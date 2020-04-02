@@ -13,10 +13,6 @@ class OrderController {
     const { page = 1, per_page = 20 } = req.query;
 
     const orders = await Order.findAll({
-      where: {
-        canceled_at: null,
-        end_date: null,
-      },
       order: ['product'],
       attributes: ['id', 'product', 'canceled_at', 'start_date', 'end_date'],
       limit: per_page,
@@ -65,8 +61,6 @@ class OrderController {
 
     const orders = await Order.findAll({
       where: {
-        canceled_at: null,
-        end_date: null,
         id,
       },
       order: ['product'],

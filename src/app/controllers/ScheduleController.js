@@ -27,6 +27,7 @@ class ScheduleController {
     const orders = await Order.findAll({
       where: {
         canceled_at: null,
+        end_date: null,
         deliveryman_id: deliveryman.id,
       },
       order: ['product'],

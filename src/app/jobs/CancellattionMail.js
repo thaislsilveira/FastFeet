@@ -6,7 +6,6 @@ class CancellationMail {
   }
 
   async handle({ data }) {
-    // TODO: Criar um loop nos problemas e mandar no email
     const {
       order: { deliveryman, recipient, product },
     } = data.problems[0];

@@ -56,6 +56,57 @@ class DeliveryProblemController {
     return res.json(deliveryProblems);
   }
 
+  async findOne(req, res) {
+    const { page = 1, per_page = 20 } = req.query;
+
+    const { id } = req.params;
+
+    const deliveryProblems = await DeliveryProblem.findAll({
+      where: {
+        id,
+      },
+      attributes: ['id', 'description'],
+      limit: per_page,
+      offset: (page - 1) * per_page,
+      include: [
+        {
+          model: Order,
+          as: 'order',
+          attributes: ['id', 'product'],
+          include: [
+            {
+              model: Recipient,
+              as: 'recipient',
+              attributes: [
+                'id',
+                'name',
+                'street',
+                'number',
+                'complement',
+                'state',
+                'city',
+                'cep',
+              ],
+            },
+            {
+              model: Deliveryman,
+              as: 'deliveryman',
+              attributes: ['id', 'name', 'email'],
+              include: [
+                {
+                  model: File,
+                  as: 'avatar',
+                  attributes: ['id', 'path', 'url'],
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    return res.json(deliveryProblems);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       order_id: Yup.number().required(),

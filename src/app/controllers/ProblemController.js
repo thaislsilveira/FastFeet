@@ -19,7 +19,7 @@ class ProblemController {
         order_id: order.id,
       },
       order: ['description'],
-      attributes: ['id', 'description'],
+      attributes: ['id', 'description', 'created_at'],
       limit: per_page,
       offset: (page - 1) * per_page,
       include: [
