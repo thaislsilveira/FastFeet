@@ -1,7 +1,10 @@
 # FastFeet 
-[*backend*](https://github.com/thaislsilveira/FastFeet)
-[*frontend*](https://github.com/thaislsilveira/FastFeet-Frontend)
-[*mobile*](https://github.com/thaislsilveira/FastFeet-Mobile)
+[*backend*](https://github.com/thaislsilveira/FastFeet)  
+
+[*frontend*](https://github.com/thaislsilveira/FastFeet-Frontend)  
+
+[*mobile*](https://github.com/thaislsilveira/FastFeet-Mobile)  
+
 
 Backend desenvolvido no treinamento GoStack, aplicado pela Rocketseat. Este desafio faz parte do projeto final do GoStack, desenvolvendo o FastFeet, uma transportadora fictícia.
 
