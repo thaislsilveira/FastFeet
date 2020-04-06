@@ -53,10 +53,12 @@ yarn sequelize db:seed:all
 
 para utilização da aplicação como admin você pode utilizar o seguinte usuário:
 
+```
 email: admin@fastfeet.com
 senha: 123456
-
+```
 -Executando o projeto
-
+```
 yarn dev || npm run dev
 yarn queue || npm run queue
+```
