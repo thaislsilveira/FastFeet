@@ -17,20 +17,20 @@ Em caso de download do projeto você precisará baixar as dependências:
 Durante o processo de desenvolvimento foi utilizado o Docker, portanto é recomendado que você faça o uso para utiização dos bancos de dados, você pode utilizar a partir dos seguintes comandos:
  ```
  #instalar a imagem do Redis 
-docker run --name nameImage -p 6379:6379 -d -t redis:alpine
+docker run --name redisfastfeet -p 6379:6379 -d -t redis:alpine
 
 #instalar a imagem do Postgres
-docker run --name nameImage -e POSTGRES_PASSWORD=yourPassword -p 5432:5432 -d postgres
+docker run --name database -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
 
 ```
 - Comandos para execução dos serviços
 
 ```
 #start Redis
-docker start nameImage
+docker start redisfastfeet
 
 #start Postgres
-docker start nameImage
+docker start database
 
 ```
 - Clonar o projeto e baixar as dependências:
@@ -40,7 +40,6 @@ git clone https://github.com/thaislsilveira/FastFeet.git
 
 
 # Instalando as dependências
-npm install
 yarn
 
 # rodar as migrations migrations
@@ -59,6 +58,6 @@ senha: 123456
 ```
 -Executando o projeto
 ```
-yarn dev || npm run dev
-yarn queue || npm run queue
+yarn dev
+yarn queue
 ```
