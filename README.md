@@ -42,7 +42,6 @@ docker start redisfastfeet
 # Clonando o respositório
 git clone https://github.com/thaislsilveira/FastFeet.git
 
-
 # Instalando as dependências
 yarn
 
