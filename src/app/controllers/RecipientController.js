@@ -144,7 +144,7 @@ class RecipientController {
       return res.status(404).json({ error: 'This recipient does not exists' });
     }
 
-    Recipient.destroy({ where: { id: recipient.id } });
+    await Recipient.destroy({ where: { id: recipient.id } });
 
     return res.json({ message: 'successfully deleted!' });
   }

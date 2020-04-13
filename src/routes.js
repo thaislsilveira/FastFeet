@@ -33,7 +33,6 @@ routes.post('/deliveryproblems', DeliveyProblemController.store);
 
 routes.post('/deliveryproblems/:id/problems', ProblemController.store);
 routes.get('/deliveryproblems/:id/problems', ProblemController.index);
-routes.delete('/deliveryproblems/:id', DeliveyProblemController.delete);
 
 routes.post('/files', upload.single('file'), FileController.store);
 
@@ -58,5 +57,6 @@ routes.delete('/orders/:id', OrderController.delete);
 routes.post('/deliveryproblems', DeliveyProblemController.store);
 routes.get('/deliveryproblems', DeliveyProblemController.index);
 routes.get('/deliveryproblems/:id', DeliveyProblemController.findOne);
+routes.delete('/deliveryproblems/:id', DeliveyProblemController.delete);
 
 export default routes;

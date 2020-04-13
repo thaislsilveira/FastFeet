@@ -201,11 +201,13 @@ class OrderController {
   async delete(req, res) {
     const order = await Order.findByPk(req.params.id);
 
-    order.canceled_at = new Date();
+    if (!order) {
+      return res.status(404).json({ error: 'This order does not exists' });
+    }
 
-    await order.save();
+    Order.destroy({ where: { id: order.id } });
 
-    return res.json({ message: 'Pedido cancelado com sucesso!' });
+    return res.json({ message: 'successfully deleted!' });
   }
 }
 

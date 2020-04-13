@@ -117,7 +117,9 @@ class DeliverymanController {
         .json({ error: 'This deliveryman does not exists' });
     }
 
-    Deliveryman.destroy({ where: { id: deliveryman.id } });
+    await Deliveryman.destroy({
+      where: { id: deliveryman.id },
+    });
 
     return res.json({ message: 'successfully deleted!' });
   }

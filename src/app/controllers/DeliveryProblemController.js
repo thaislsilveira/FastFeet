@@ -134,11 +134,11 @@ class DeliveryProblemController {
   }
 
   async delete(req, res) {
-    const deliveryProblem = await DeliveryProblem.findByPk(req.params.id);
+    const order = await Order.findByPk(req.params.id);
 
-    deliveryProblem.canceled_at = new Date();
+    order.canceled_at = new Date();
 
-    await deliveryProblem.save();
+    await order.save();
 
     const problems = await DeliveryProblem.findAll({
       order: ['description'],
@@ -184,7 +184,7 @@ class DeliveryProblemController {
       problems,
     });
 
-    return res.json({ message: 'Encomenda cancelado com sucesso!' });
+    return res.json({ message: 'Pedido cancelado com sucesso!' });
   }
 }
 export default new DeliveryProblemController();

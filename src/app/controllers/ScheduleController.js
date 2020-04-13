@@ -134,27 +134,17 @@ class ScheduleController {
         start_date: { [Op.gte]: startOfDay(today), [Op.lte]: endOfDay(today) },
       },
     });
-    console.log(countDeliveries);
+
     if (countDeliveries + 1 > 5) {
       return res.status(400).json({
         error: 'Only 5 withdrawals are allowed per day!',
       });
     }
 
-    const { signature } = await Order.findByPk(req.params.id, {
-      include: [
-        {
-          model: File,
-          as: 'signature',
-          attributes: ['id', 'path', 'url'],
-        },
-      ],
-    });
-
     await order.update({
       start_date,
       end_date,
-      signature,
+      signature_id,
     });
 
     return res.json({ message: 'Alterações realizadas com sucesso!' });
