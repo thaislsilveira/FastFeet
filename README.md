@@ -24,7 +24,6 @@ docker run --name database -e POSTGRES_PASSWORD=docker -p 5432:5432 -d postgres
  
 #instalar a imagem do Redis 
 docker run --name redisfastfeet -p 6379:6379 -d -t redis:alpine
-
 ```
 - Comandos para execução dos serviços
 
@@ -37,7 +36,6 @@ docker start mongofastfeet
 
 #start Redis
 docker start redisfastfeet
-
 ```
 - Clonar o projeto e baixar as dependências:
 ```
