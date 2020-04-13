@@ -12,9 +12,9 @@ Backend desenvolvido em NodeJs, no treinamento GoStack, aplicado pela Rocketseat
 ### Instruções
 Em caso de download do projeto você precisará baixar as dependências:  
 
-**Necessário:** Yarn ou Npm, Git, Express, PostgreSQL, Redis  e para integração com o banco de dados, foi ulitizado o sequelize.
+**Necessário:** Yarn ou Npm, Git, Express, PostgreSQL, Redis  e para integração com o banco de dados, o sequelize.
 
-Durante o processo de desenvolvimento foi utilizado o Docker, portanto é recomendado que você faça o uso para utiização dos bancos de dados, você pode utilizar a partir dos seguintes comandos:
+Durante o processo de desenvolvimento foi utilizado o Docker, utilizando os seguintes comandos:
  ```
  #instalar a imagem do Redis 
 docker run --name redisfastfeet -p 6379:6379 -d -t redis:alpine
